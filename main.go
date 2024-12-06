@@ -17,6 +17,7 @@ type BlockInfo struct {
 	Timestamp        string            `json:"timestamp"`
 	TransactionCount int               `json:"transactionCount"`
 	Transactions     []string          `json:"transactions"`
+	InternalTxs      []string          `json:"internalTxs"`
 	Details          BlockDetails      `json:"details"`
 }
 
@@ -60,6 +61,17 @@ func getBlock(c echo.Context) error {
 	timestamp := time.Unix(int64(block.Time()), 0)
 
 	txCount := len(block.Transactions())
+	internalTxs := []string{}
+	for _, tx := range block.Transactions() {
+		receipt, err := client.TransactionReceipt(ctx, tx.Hash())
+		if err != nil {
+			log.Printf("Failed to retrieve transaction receipt: %v", err)
+			continue
+		}
+		for _, log := range receipt.Logs {
+			internalTxs = append(internalTxs, log.Address.Hex())
+		}
+	}
 	txHashes := []string{}
 	for _, tx := range block.Transactions() {
 		txHashes = append(txHashes, tx.Hash().Hex())
@@ -71,6 +83,7 @@ func getBlock(c echo.Context) error {
 		Timestamp:        timestamp.UTC().Format(time.RFC3339),
 		TransactionCount: txCount,
 		Transactions:     txHashes,
+		InternalTxs:      internalTxs,
 		Details: BlockDetails{
 			BlockHash:  block.Hash().Hex(),
 			ParentHash: header.ParentHash.Hex(),
