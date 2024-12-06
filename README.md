@@ -1,5 +1,6 @@
 # Go Ethereum Explorer
 
+<img src="https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white"/>
 This project is a simple Ethereum block explorer written in Go. It uses the `go-ethereum` package to connect to an Ethereum node and retrieve block and transaction information. The project also uses the `echo` web framework to create a RESTful API.
 
 ## Features
