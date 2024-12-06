@@ -14,7 +14,7 @@ This project is a simple Ethereum block explorer written in Go. It uses the `go-
 
 ### Prerequisites
 
-- Go 1.16 or later
+- Go 1.23.4 (latest version)
 - An Ethereum node RPC URL (e.g., from a service like Omnia)
 
 ### Installation
